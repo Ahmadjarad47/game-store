@@ -1,68 +1,61 @@
-name: Deploy Angular to VPS
+name: Auto Deploy Game Store Angular Frontend to VPS
 
 on:
   push:
     branches:
-      - main  # أي push على الفرع الرئيسي
+      - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    # 1️⃣ سحب آخر نسخة من المستودع
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      # 1️⃣ استنساخ المستودع
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # 2️⃣ إعداد Node.js
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
+      # 2️⃣ إعداد Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-    # 3️⃣ تثبيت dependencies
-    - name: Install dependencies
-      run: npm ci
+      # 3️⃣ تثبيت dependencies وبناء المشروع
+      - name: Install dependencies and build Angular
+        run: |
+          npm install
+          npm run build --configuration=production
 
-    # 4️⃣ بناء Angular
-    - name: Build Angular
-      run: npm run build --if-present
+      # 4️⃣ تنظيف الملفات القديمة على VPS
+      - name: Clean old files on server
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.NEW_VPS_HOST }}
+          username: ${{ secrets.NEW_VPS_USER }}
+          key: ${{ secrets.NEW_VPS_KEY }}
+          script: |
+            echo "Removing old files..."
+            rm -rf /var/www/eng-sy/*
+            mkdir -p /var/www/eng-sy
 
-    # 5️⃣ التحقق من مجلد البناء
-    - name: Check dist folder
-      run: ls -la dist/store.ui/browser
+      # 5️⃣ نسخ ملفات البناء إلى VPS
+      - name: Copy Angular build files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.NEW_VPS_HOST }}
+          username: ${{ secrets.NEW_VPS_USER }}
+          key: ${{ secrets.NEW_VPS_KEY }}
+          source: "dist/store.ui/browser/**"
+          target: /var/www/eng-sy/
+          strip_components: 3
 
-    # 6️⃣ تنظيف مجلد الهدف على VPS
-    - name: Clean remote folder
-      uses: appleboy/ssh-action@v0.1.7
-      with:
-        host: ${{ secrets.NEW_VPS_HOST }}
-        username: ${{ secrets.NEW_VPS_USER }}
-        key: ${{ secrets.NEW_VPS_KEY }}
-        port: 22
-        script: |
-          rm -rf /var/www/eng-sy/*
-          mkdir -p /var/www/eng-sy
-
-    # 7️⃣ نسخ الملفات إلى VPS
-    - name: Copy files to VPS
-      uses: appleboy/scp-action@v0.1.3
-      with:
-        host: ${{ secrets.NEW_VPS_HOST }}
-        username: ${{ secrets.NEW_VPS_USER }}
-        key: ${{ secrets.NEW_VPS_KEY }}
-        port: 22
-        source: "dist/store.ui/browser/*"
-        target: "/var/www/eng-sy/"
-
-    # 8️⃣ إعادة تحميل Nginx
-    - name: Reload Nginx
-      uses: appleboy/ssh-action@v0.1.7
-      with:
-        host: ${{ secrets.NEW_VPS_HOST }}
-        username: ${{ secrets.NEW_VPS_USER }}
-        key: ${{ secrets.NEW_VPS_KEY }}
-        port: 22
-        script: |
-          nginx -t
-          systemctl reload nginx
+      # 6️⃣ إعادة تحميل Nginx
+      - name: Reload Nginx
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.NEW_VPS_HOST }}
+          username: ${{ secrets.NEW_VPS_USER }}
+          key: ${{ secrets.NEW_VPS_KEY }}
+          script: |
+            nginx -t
+            systemctl reload nginx
