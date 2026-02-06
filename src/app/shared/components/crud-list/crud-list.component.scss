@@ -1,0 +1,99 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.crud-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.crud-list-item {
+  @include card;
+  @include interactive-base;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+  cursor: pointer;
+  transition: transform $transition-base $transition-ease,
+              box-shadow $transition-base $transition-ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.crud-list-item-content {
+  flex: 1;
+}
+
+.crud-list-item-actions {
+  display: flex;
+  gap: $spacing-sm;
+  margin-left: $spacing-md;
+}
+
+.btn-edit,
+.btn-delete,
+.btn-refresh {
+  @include interactive-base;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.btn-edit {
+  background-color: $color-interactive;
+  color: $color-text-inverse;
+
+  &:hover {
+    background-color: $color-interactive-hover;
+  }
+
+  &:active {
+    background-color: $color-interactive-active;
+  }
+}
+
+.btn-delete {
+  background-color: transparent;
+  color: $color-error;
+  border-color: $color-error;
+
+  &:hover {
+    background-color: $color-error;
+    color: $color-text-inverse;
+  }
+}
+
+.btn-refresh {
+  background-color: $color-interactive;
+  color: $color-text-inverse;
+  margin-top: $spacing-md;
+
+  &:hover {
+    background-color: $color-interactive-hover;
+  }
+}
+
+.crud-list-loading,
+.crud-list-error,
+.crud-list-empty {
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-2xl;
+  text-align: center;
+  color: $color-text-secondary;
+}
+
+.crud-list-error {
+  color: $color-error;
+}

@@ -1,0 +1,103 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.crud-form {
+  @include card;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.crud-form-error {
+  background-color: rgba($color-error, 0.1);
+  border: 1px solid $color-error;
+  border-radius: $border-radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-lg;
+  color: $color-error;
+}
+
+.crud-form-actions {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: flex-end;
+  margin-top: $spacing-xl;
+  padding-top: $spacing-lg;
+  border-top: 1px solid $color-border;
+}
+
+.btn-submit,
+.btn-cancel {
+  @include interactive-base;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $border-radius-md;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  min-width: 100px;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-submit {
+  background-color: $color-interactive;
+  color: $color-text-inverse;
+  border: 1px solid $color-interactive;
+
+  &:hover:not(:disabled) {
+    background-color: $color-interactive-hover;
+  }
+
+  &:active:not(:disabled) {
+    background-color: $color-interactive-active;
+  }
+}
+
+.btn-cancel {
+  background-color: transparent;
+  color: $color-text-primary;
+  border: 1px solid $color-border;
+
+  &:hover:not(:disabled) {
+    background-color: $color-bg-secondary;
+  }
+}
+
+.form-group {
+  margin-bottom: $spacing-lg;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: $spacing-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.form-control {
+  width: 100%;
+  padding: $spacing-sm $spacing-md;
+  border: 1px solid $color-border;
+  border-radius: $border-radius-md;
+  font-size: $font-size-base;
+  transition: border-color $transition-base $transition-ease;
+
+  &:focus {
+    outline: none;
+    border-color: $color-border-focus;
+    box-shadow: 0 0 0 3px rgba($color-border-focus, 0.1);
+  }
+
+  &.invalid {
+    border-color: $color-error;
+  }
+}
+
+.form-error {
+  display: block;
+  margin-top: $spacing-xs;
+  font-size: $font-size-sm;
+  color: $color-error;
+}

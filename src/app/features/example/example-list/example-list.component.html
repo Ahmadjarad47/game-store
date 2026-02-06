@@ -1,0 +1,49 @@
+<div class="example-list-container">
+  <header class="example-list-header">
+    <h1>Examples</h1>
+    <a routerLink="/examples/new" class="btn-create">Create New</a>
+  </header>
+
+@if (loading()) {
+  <div class="example-list-loading">
+    <p>Loading...</p>
+  </div>
+} @else if (error()) {
+  <div class="example-list-error">
+    <p>{{ error() }}</p>
+    <button type="button" (click)="onRefreshClick()" class="btn-refresh">
+      Retry
+    </button>
+  </div>
+} @else if (items().length === 0) {
+  <div class="example-list-empty">
+    <p>No examples found</p>
+  </div>
+} @else {
+  <ul class="example-list">
+    @for (item of items(); track item.id) {
+      <li class="example-list-item" (click)="onItemClick(item)">
+        <div class="example-list-item-content">
+          <div class="example-item">
+            <h3>{{ item.name }}</h3>
+            @if (item.description) {
+              <p>{{ item.description }}</p>
+            }
+            <span class="example-status" [attr.data-status]="item.status">
+              {{ item.status }}
+            </span>
+          </div>
+        </div>
+        <div class="example-list-item-actions">
+          <a [routerLink]="['/examples', item.id, 'edit']" class="btn-edit" (click)="onEditClick(item); $event.stopPropagation()">
+            Edit
+          </a>
+          <button type="button" class="btn-delete" (click)="onDeleteClick(item); $event.stopPropagation()">
+            Delete
+          </button>
+        </div>
+      </li>
+    }
+  </ul>
+}
+</div>

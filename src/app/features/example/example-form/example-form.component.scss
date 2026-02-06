@@ -1,0 +1,12 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.example-form-container {
+  @include container;
+  padding-top: $spacing-xl;
+  padding-bottom: $spacing-xl;
+}
+
+.example-form-header {
+  margin-bottom: $spacing-xl;
+}

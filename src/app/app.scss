@@ -1,0 +1,83 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.app-header {
+  background-color: $color-interactive;
+  color: $color-text-inverse;
+  padding: $spacing-md 0;
+  box-shadow: $shadow-sm;
+
+  .container {
+    @include flex-between;
+  }
+}
+
+.app-title {
+  margin: 0;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-inverse;
+}
+
+.app-nav {
+  display: flex;
+  gap: $spacing-lg;
+
+  a {
+    color: $color-text-inverse;
+    text-decoration: none;
+    padding: $spacing-xs $spacing-md;
+    border-radius: $border-radius-md;
+    transition: background-color $transition-base $transition-ease;
+
+    &:hover {
+      background-color: rgba($color-text-inverse, 0.1);
+      text-decoration: none;
+    }
+
+    &.active {
+      background-color: rgba($color-text-inverse, 0.2);
+    }
+
+    &:focus-visible {
+      @include focus-visible;
+    }
+  }
+}
+
+.app-main {
+  min-height: calc(100vh - 200px);
+  padding: $spacing-xl 0;
+}
+
+.app-footer {
+  background-color: $color-bg-secondary;
+  padding: $spacing-lg 0;
+  margin-top: auto;
+  border-top: 1px solid $color-border;
+
+  p {
+    margin: 0;
+    text-align: center;
+    color: $color-text-secondary;
+    font-size: $font-size-sm;
+  }
+}
+
+.skip-link {
+  @include sr-only;
+
+  &:focus {
+    position: fixed;
+    top: $spacing-md;
+    left: $spacing-md;
+    z-index: $z-index-tooltip;
+    width: auto;
+    height: auto;
+    padding: $spacing-sm $spacing-md;
+    background: $color-interactive;
+    color: $color-text-inverse;
+    clip: auto;
+    white-space: nowrap;
+  }
+}

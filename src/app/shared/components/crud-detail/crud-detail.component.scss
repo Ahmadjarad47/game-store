@@ -1,0 +1,85 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.crud-detail {
+  @include card;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.crud-detail-actions {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: flex-end;
+  margin-bottom: $spacing-xl;
+  padding-bottom: $spacing-lg;
+  border-bottom: 1px solid $color-border;
+}
+
+.btn-edit,
+.btn-delete,
+.btn-back {
+  @include interactive-base;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-md;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+}
+
+.btn-edit {
+  background-color: $color-interactive;
+  color: $color-text-inverse;
+  border: 1px solid $color-interactive;
+
+  &:hover {
+    background-color: $color-interactive-hover;
+  }
+
+  &:active {
+    background-color: $color-interactive-active;
+  }
+}
+
+.btn-delete {
+  background-color: transparent;
+  color: $color-error;
+  border: 1px solid $color-error;
+
+  &:hover {
+    background-color: $color-error;
+    color: $color-text-inverse;
+  }
+}
+
+.btn-back {
+  background-color: transparent;
+  color: $color-text-primary;
+  border: 1px solid $color-border;
+  margin-top: $spacing-md;
+
+  &:hover {
+    background-color: $color-bg-secondary;
+  }
+}
+
+.crud-detail-content {
+  padding: $spacing-md 0;
+}
+
+.crud-detail-loading,
+.crud-detail-error,
+.crud-detail-empty {
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-2xl;
+  text-align: center;
+}
+
+.crud-detail-error {
+  color: $color-error;
+}
+
+.crud-detail-empty {
+  color: $color-text-secondary;
+}

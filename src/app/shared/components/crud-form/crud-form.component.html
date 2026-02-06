@@ -1,0 +1,25 @@
+<form [formGroup]="formGroup()" (ngSubmit)="onSubmit()" class="crud-form">
+  @if (error()) {
+    <div class="crud-form-error" role="alert">
+      <p>{{ error() }}</p>
+    </div>
+  }
+
+  <ng-content />
+
+  <div class="crud-form-actions">
+    <button type="submit" [disabled]="loading() || formGroup().invalid" class="btn-submit">
+      @if (loading()) {
+        <span>Saving...</span>
+      } @else {
+        <span>{{ submitLabel() }}</span>
+      }
+    </button>
+
+    @if (showCancel()) {
+      <button type="button" (click)="onCancel()" [disabled]="loading()" class="btn-cancel">
+        {{ cancelLabel() }}
+      </button>
+    }
+  </div>
+</form>

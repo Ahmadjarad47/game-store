@@ -1,0 +1,64 @@
+<div class="example-form-container">
+  <header class="example-form-header">
+    <h1>{{ isEditMode ? 'Edit Example' : 'Create Example' }}</h1>
+  </header>
+
+  <app-crud-form
+    [formGroup]="formGroup"
+    [loading]="loading()"
+    [error]="error()"
+    [submitLabel]="isEditMode ? 'Update' : 'Create'"
+    (formSubmit)="onSubmit($event)"
+    (formCancel)="onCancel()"
+  >
+    <div class="form-group">
+      <label for="name" class="form-label">Name *</label>
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        class="form-control"
+        [class.invalid]="formGroup.get('name')?.invalid && formGroup.get('name')?.touched"
+        aria-required="true"
+        aria-invalid="formGroup.get('name')?.invalid"
+      />
+      @if (formGroup.get('name')?.invalid && formGroup.get('name')?.touched) {
+        <span class="form-error" role="alert">
+          @if (formGroup.get('name')?.errors?.['required']) {
+            Name is required
+          } @else if (formGroup.get('name')?.errors?.['minlength']) {
+            Name must be at least 3 characters
+          }
+        </span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="description" class="form-label">Description</label>
+      <textarea
+        id="description"
+        formControlName="description"
+        class="form-control"
+        rows="4"
+      ></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="status" class="form-label">Status *</label>
+      <select
+        id="status"
+        formControlName="status"
+        class="form-control"
+        [class.invalid]="formGroup.get('status')?.invalid && formGroup.get('status')?.touched"
+        aria-required="true"
+        aria-invalid="formGroup.get('status')?.invalid"
+      >
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+      @if (formGroup.get('status')?.invalid && formGroup.get('status')?.touched) {
+        <span class="form-error" role="alert">Status is required</span>
+      }
+    </div>
+  </app-crud-form>
+</div>

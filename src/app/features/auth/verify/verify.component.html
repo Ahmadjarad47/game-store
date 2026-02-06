@@ -1,0 +1,92 @@
+<div class="verify-container">
+  <div class="verify-card">
+    <header class="verify-header">
+      <h1 class="verify-title">التحقق من الحساب</h1>
+      <p class="verify-subtitle">أدخل رمز التحقق الذي تم إرساله إلى بريدك الإلكتروني</p>
+    </header>
+
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="verify-form" novalidate>
+      @if (error()) {
+        <div class="alert alert-error" role="alert">
+          <span class="alert-icon" aria-hidden="true">⚠️</span>
+          <span class="alert-message">{{ error() }}</span>
+        </div>
+      }
+
+      <div class="form-group">
+        <label for="email" class="form-label">
+          البريد الإلكتروني
+          <span class="required-indicator" aria-label="required">*</span>
+        </label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          class="form-control"
+          [class.invalid]="emailControl?.invalid && emailControl?.touched"
+          placeholder="أدخل بريدك الإلكتروني"
+          autocomplete="email"
+          aria-required="true"
+          aria-invalid="emailControl?.invalid"
+          [attr.aria-describedby]="emailErrors ? 'email-error' : null"
+        />
+        @if (emailErrors) {
+          <span id="email-error" class="form-error" role="alert">
+            {{ emailErrors }}
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="verificationCode" class="form-label">
+          رمز التحقق
+          <span class="required-indicator" aria-label="required">*</span>
+        </label>
+        <input
+          id="verificationCode"
+          type="text"
+          formControlName="verificationCode"
+          class="form-control"
+          [class.invalid]="verificationCodeControl?.invalid && verificationCodeControl?.touched"
+          placeholder="أدخل رمز التحقق"
+          aria-required="true"
+          aria-invalid="verificationCodeControl?.invalid"
+          [attr.aria-describedby]="verificationCodeErrors ? 'verification-code-error' : null"
+        />
+        @if (verificationCodeErrors) {
+          <span id="verification-code-error" class="form-error" role="alert">
+            {{ verificationCodeErrors }}
+          </span>
+        }
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="btn btn-primary btn-block"
+          [disabled]="loading() || formGroup.invalid"
+          [attr.aria-busy]="loading()"
+        >
+          @if (loading()) {
+            <span class="btn-spinner" aria-hidden="true"></span>
+            <span>جاري التحقق...</span>
+          } @else {
+            <span>التحقق من الحساب</span>
+          }
+        </button>
+      </div>
+
+      <div class="verify-footer">
+        <button
+          type="button"
+          class="btn btn-secondary btn-block"
+          (click)="resendCode()"
+          [disabled]="loading() || !emailControl?.valid"
+        >
+          إعادة إرسال رمز التحقق
+        </button>
+        <a routerLink="/auth/login" class="link">العودة إلى تسجيل الدخول</a>
+      </div>
+    </form>
+  </div>
+</div>

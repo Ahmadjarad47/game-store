@@ -1,0 +1,42 @@
+@if (loading()) {
+  <div class="crud-list-loading">
+    <p>Loading...</p>
+  </div>
+} @else if (error()) {
+  <div class="crud-list-error">
+    <p>{{ error() }}</p>
+    <button type="button" (click)="onRefreshClick()" class="btn-refresh">
+      Retry
+    </button>
+  </div>
+} @else if (isEmpty()) {
+  <div class="crud-list-empty">
+    <p>{{ emptyMessage() }}</p>
+  </div>
+} @else {
+  <ul class="crud-list">
+    @for (item of items(); track item.id) {
+      <li class="crud-list-item" (click)="onItemClick(item)">
+        <div class="crud-list-item-content">
+          <ng-content />
+        </div>
+        @if (showActions()) {
+          <div class="crud-list-item-actions">
+            @if (editRoute()) {
+              <a [routerLink]="[editRoute(), item.id]" class="btn-edit" (click)="onEditClick(item, $event)">
+                Edit
+              </a>
+            } @else {
+              <button type="button" class="btn-edit" (click)="onEditClick(item, $event)">
+                Edit
+              </button>
+            }
+            <button type="button" class="btn-delete" (click)="onDeleteClick(item, $event)">
+              Delete
+            </button>
+          </div>
+        }
+      </li>
+    }
+  </ul>
+}

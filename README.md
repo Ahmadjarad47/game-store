@@ -1,59 +1,160 @@
-# StoreUi
+# Store UI - Angular 21 Standalone Application
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.2.
+A modern Angular 21 application built with standalone components, zoneless change detection, and signal-based state management.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- ✅ **Zoneless Change Detection** - Optimal performance with experimental zoneless change detection
+- ✅ **Signal-Based State Management** - Reactive state management using Angular Signals (no NgRx)
+- ✅ **Generic CRUD Architecture** - Reusable CRUD components and services
+- ✅ **Lazy Loading** - Optimized route loading
+- ✅ **SCSS Theme System** - Customizable theme with design tokens
+- ✅ **Accessibility (a11y)** - WCAG AA compliant
+- ✅ **TypeScript Strict Mode** - Type-safe development
+- ✅ **SSR Support** - Server-side rendering enabled
 
-```bash
-ng serve
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── core/                    # Core functionality
+│   │   ├── models/              # Base models and interfaces
+│   │   ├── interfaces/          # Type definitions
+│   │   └── services/            # Base services (CRUD, State)
+│   ├── shared/                  # Shared components and directives
+│   │   ├── components/          # Reusable CRUD components
+│   │   └── directives/          # Shared directives
+│   ├── features/                # Feature modules
+│   │   └── example/             # Example feature implementation
+│   ├── app.config.ts            # Application configuration
+│   └── app.routes.ts            # Route configuration
+├── environments/                # Environment configurations
+├── styles/                      # Global styles
+│   ├── _variables.scss         # Theme variables
+│   └── _mixins.scss            # SCSS mixins
+└── styles.scss                  # Main stylesheet
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Getting Started
 
-## Code scaffolding
+### Prerequisites
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- Node.js 18+ 
+- npm 9+
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Installation
 
 ```bash
-ng generate --help
+npm install
 ```
 
-## Building
-
-To build the project run:
+### Development
 
 ```bash
-ng build
+npm start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Navigate to `http://localhost:4200/`
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Build
 
 ```bash
-ng test
+# Development build
+npm run build
+
+# Production build
+npm run build -- --configuration production
 ```
 
-## Running end-to-end tests
+## Architecture
 
-For end-to-end (e2e) testing, run:
+### CRUD Architecture
 
-```bash
-ng e2e
+The application includes a generic, reusable CRUD architecture:
+
+1. **Base Model** (`core/models/base.model.ts`)
+   - `BaseModel` interface with common fields
+   - `CreateModel` and `UpdateModel` utility types
+
+2. **CRUD Service** (`core/services/base-crud.service.ts`)
+   - Generic HTTP-based CRUD operations
+   - Extend for specific entities
+
+3. **Signal State Service** (`core/services/signal-state.service.ts`)
+   - Reactive state management with Signals
+   - Provides loading, error, and data signals
+
+4. **CRUD Components**
+   - `CrudListComponent` - Display list of items
+   - `CrudFormComponent` - Create/edit forms
+   - `CrudDetailComponent` - Detail view
+
+### Example Usage
+
+```typescript
+// 1. Create a model
+export interface Product extends BaseModel {
+  name: string;
+  price: number;
+}
+
+// 2. Create a service
+@Injectable({ providedIn: 'root' })
+export class ProductService extends BaseCrudService<Product> {
+  protected override readonly endpoint = 'products';
+}
+
+// 3. Create state service
+@Injectable({ providedIn: 'root' })
+export class ProductState extends SignalStateService<Product> {}
+
+// 4. Use in component
+export class ProductListComponent {
+  private productService = inject(ProductService);
+  private productState = inject(ProductState);
+
+  readonly products = this.productState.items;
+  readonly loading = this.productState.loading;
+
+  async loadProducts() {
+    this.productState.setLoading(true);
+    try {
+      const response = await this.productService.getAll({ page: 1, limit: 10 });
+      this.productState.setPaginationData(response);
+    } catch (error) {
+      this.productState.setError('Failed to load products');
+    } finally {
+      this.productState.setLoading(false);
+    }
+  }
+}
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Theme Configuration
 
-## Additional Resources
+Theme colors and design tokens are defined in `src/styles/_variables.scss`:
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Background**: `#ffffff`
+- **Primary/Interactive**: `#002623`
+- **Text**: `#161616`
+
+Customize these variables to match your brand.
+
+## Environment Configuration
+
+- `src/environments/environment.ts` - Development settings
+- `src/environments/environment.prod.ts` - Production settings
+
+## Best Practices
+
+1. **Standalone Components** - All components are standalone
+2. **OnPush Change Detection** - Used in all components
+3. **Signals for State** - Use signals instead of RxJS observables for state
+4. **Type Safety** - Strict TypeScript configuration
+5. **Accessibility** - All components follow WCAG AA standards
+6. **Lazy Loading** - Feature routes are lazy loaded
+
+## License
+
+Private project

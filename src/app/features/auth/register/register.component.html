@@ -1,0 +1,158 @@
+<div class="register-container">
+  <div class="register-card">
+    <header class="register-header">
+      <h1 class="register-title">إنشاء حساب جديد</h1>
+      <p class="register-subtitle">املأ النموذج أدناه لإنشاء حسابك</p>
+    </header>
+
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="register-form" novalidate>
+      @if (error()) {
+        <div class="alert alert-error" role="alert">
+          <span class="alert-icon" aria-hidden="true">⚠️</span>
+          <span class="alert-message">{{ error() }}</span>
+        </div>
+      }
+
+      <div class="form-group">
+        <label for="username" class="form-label">
+          اسم المستخدم
+          <span class="required-indicator" aria-label="required">*</span>
+        </label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          class="form-control"
+          [class.invalid]="usernameControl?.invalid && usernameControl?.touched"
+          placeholder="أدخل اسم المستخدم"
+          autocomplete="username"
+          aria-required="true"
+          aria-invalid="usernameControl?.invalid"
+          [attr.aria-describedby]="usernameErrors ? 'username-error' : null"
+        />
+        @if (usernameErrors) {
+          <span id="username-error" class="form-error" role="alert">
+            {{ usernameErrors }}
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="form-label">
+          البريد الإلكتروني
+          <span class="required-indicator" aria-label="required">*</span>
+        </label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          class="form-control"
+          [class.invalid]="emailControl?.invalid && emailControl?.touched"
+          placeholder="أدخل بريدك الإلكتروني"
+          autocomplete="email"
+          aria-required="true"
+          aria-invalid="emailControl?.invalid"
+          [attr.aria-describedby]="emailErrors ? 'email-error' : null"
+        />
+        @if (emailErrors) {
+          <span id="email-error" class="form-error" role="alert">
+            {{ emailErrors }}
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber" class="form-label">
+          رقم الهاتف
+          <span class="required-indicator" aria-label="required">*</span>
+        </label>
+        <input
+          id="phoneNumber"
+          type="tel"
+          formControlName="phoneNumber"
+          class="form-control"
+          [class.invalid]="phoneNumberControl?.invalid && phoneNumberControl?.touched"
+          placeholder="أدخل رقم هاتفك"
+          autocomplete="tel"
+          aria-required="true"
+          aria-invalid="phoneNumberControl?.invalid"
+          [attr.aria-describedby]="phoneNumberErrors ? 'phone-error' : null"
+        />
+        @if (phoneNumberErrors) {
+          <span id="phone-error" class="form-error" role="alert">
+            {{ phoneNumberErrors }}
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">
+          كلمة المرور
+          <span class="required-indicator" aria-label="required">*</span>
+        </label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          class="form-control"
+          [class.invalid]="passwordControl?.invalid && passwordControl?.touched"
+          placeholder="أدخل كلمة المرور"
+          autocomplete="new-password"
+          aria-required="true"
+          aria-invalid="passwordControl?.invalid"
+          [attr.aria-describedby]="passwordErrors ? 'password-error' : null"
+        />
+        @if (passwordErrors) {
+          <span id="password-error" class="form-error" role="alert">
+            {{ passwordErrors }}
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword" class="form-label">
+          تأكيد كلمة المرور
+          <span class="required-indicator" aria-label="required">*</span>
+        </label>
+        <input
+          id="confirmPassword"
+          type="password"
+          formControlName="confirmPassword"
+          class="form-control"
+          [class.invalid]="confirmPasswordControl?.invalid && confirmPasswordControl?.touched"
+          placeholder="أعد إدخال كلمة المرور"
+          autocomplete="new-password"
+          aria-required="true"
+          aria-invalid="confirmPasswordControl?.invalid"
+          [attr.aria-describedby]="confirmPasswordErrors ? 'confirm-password-error' : null"
+        />
+        @if (confirmPasswordErrors) {
+          <span id="confirm-password-error" class="form-error" role="alert">
+            {{ confirmPasswordErrors }}
+          </span>
+        }
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="btn btn-primary btn-block"
+          [disabled]="loading() || formGroup.invalid"
+          [attr.aria-busy]="loading()"
+        >
+          @if (loading()) {
+            <span class="btn-spinner" aria-hidden="true"></span>
+            <span>جاري التسجيل...</span>
+          } @else {
+            <span>إنشاء الحساب</span>
+          }
+        </button>
+      </div>
+
+      <div class="register-footer">
+        <span>لديك حساب بالفعل؟</span>
+        <a routerLink="/auth/login" class="link">تسجيل الدخول</a>
+      </div>
+    </form>
+  </div>
+</div>

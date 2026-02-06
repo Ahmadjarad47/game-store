@@ -1,1 +1,157 @@
-/* You can add global styles to this file, and also import other style files */
+/**
+ * Global Styles
+ * Import variables and mixins, then apply base styles
+ */
+
+@use './styles/variables' as *;
+@use './styles/mixins' as *;
+
+/* Reset and Base Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  line-height: $line-height-normal;
+  color: $color-text-primary;
+  background-color: $color-bg-primary;
+  min-height: 100vh;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-tight;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+h1 { font-size: $font-size-4xl; }
+h2 { font-size: $font-size-3xl; }
+h3 { font-size: $font-size-2xl; }
+h4 { font-size: $font-size-xl; }
+h5 { font-size: $font-size-lg; }
+h6 { font-size: $font-size-base; }
+
+p {
+  margin-bottom: $spacing-md;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+a {
+  color: $color-interactive;
+  text-decoration: none;
+  transition: color $transition-base $transition-ease;
+  
+  &:hover {
+    color: $color-interactive-hover;
+    text-decoration: underline;
+  }
+  
+  &:focus-visible {
+    @include focus-visible;
+  }
+}
+
+/* Form Elements */
+button {
+  @include button-reset;
+  @include interactive-base;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: $color-text-primary;
+  background-color: $color-bg-primary;
+  border: 1px solid $color-border;
+  border-radius: $border-radius-md;
+  padding: $spacing-sm $spacing-md;
+  transition: border-color $transition-base $transition-ease,
+              box-shadow $transition-base $transition-ease;
+  
+  &:focus {
+    outline: none;
+    border-color: $color-border-focus;
+    box-shadow: 0 0 0 3px rgba($color-border-focus, 0.1);
+  }
+  
+  &:disabled {
+    background-color: $color-bg-secondary;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  &::placeholder {
+    color: $color-text-disabled;
+  }
+}
+
+/* Accessibility */
+:focus-visible {
+  @include focus-visible;
+}
+
+/* Skip to main content link */
+.skip-link {
+  @include sr-only;
+  
+  &:focus {
+    position: fixed;
+    top: $spacing-md;
+    left: $spacing-md;
+    z-index: $z-index-tooltip;
+    width: auto;
+    height: auto;
+    padding: $spacing-sm $spacing-md;
+    background: $color-interactive;
+    color: $color-text-inverse;
+    clip: auto;
+    white-space: nowrap;
+  }
+}
+
+/* Utility Classes */
+.visually-hidden {
+  @include sr-only;
+}
+
+.container {
+  @include container;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.truncate {
+  @include truncate;
+}
+

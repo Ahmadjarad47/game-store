@@ -1,0 +1,42 @@
+@if (loading()) {
+  <div class="crud-detail-loading">
+    <p>Loading...</p>
+  </div>
+} @else if (error()) {
+  <div class="crud-detail-error" role="alert">
+    <p>{{ error() }}</p>
+    <button type="button" (click)="onBackClick()" class="btn-back">
+      Go Back
+    </button>
+  </div>
+} @else if (!item()) {
+  <div class="crud-detail-empty">
+    <p>Item not found</p>
+    <button type="button" (click)="onBackClick()" class="btn-back">
+      Go Back
+    </button>
+  </div>
+} @else {
+  <div class="crud-detail">
+    @if (showActions()) {
+      <div class="crud-detail-actions">
+        @if (editRoute()) {
+          <a [routerLink]="[editRoute(), item()!.id]" class="btn-edit">
+            Edit
+          </a>
+        } @else {
+          <button type="button" class="btn-edit" (click)="onEditClick()">
+            Edit
+          </button>
+        }
+        <button type="button" class="btn-delete" (click)="onDeleteClick()">
+          Delete
+        </button>
+      </div>
+    }
+
+    <div class="crud-detail-content">
+      <ng-content />
+    </div>
+  </div>
+}
