@@ -49,6 +49,23 @@ jobs:
           target: /var/www/eng-sy/
           strip_components: 3
 
+      # 5.1️⃣ تعديل اسم index وأذونات الملفات
+      - name: Fix index and permissions
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.NEW_VPS_HOST }}
+          username: ${{ secrets.NEW_VPS_USER }}
+          key: ${{ secrets.NEW_VPS_KEY }}
+          script: |
+            # إذا موجود index.csr.html نغيره إلى index.html
+            if [ -f /var/www/eng-sy/index.csr.html ]; then
+              mv /var/www/eng-sy/index.csr.html /var/www/eng-sy/index.html
+            fi
+
+            # ضبط الأذونات لقراءة Nginx
+            chown -R www-data:www-data /var/www/eng-sy
+            chmod -R 755 /var/www/eng-sy
+
       # 6️⃣ إعادة تحميل Nginx
       - name: Reload Nginx
         uses: appleboy/ssh-action@v1.1.0
