@@ -31,7 +31,7 @@ jobs:
         username: ${{ secrets.NEW_VPS_USER }}
         key: ${{ secrets.NEW_VPS_KEY }}
         port: 22
-        source: "dist/store-ui/*"
+        source: "dist/store.ui/browser/*"
         target: "/var/www/eng-sy/"
 
     - name: Reload Nginx
