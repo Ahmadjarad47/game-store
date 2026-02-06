@@ -10,20 +10,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # 1️⃣ سحب آخر نسخة من المستودع
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    # 2️⃣ إعداد Node.js
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '20'
 
+    # 3️⃣ تثبيت dependencies
     - name: Install dependencies
-      run: npm install
+      run: npm ci
 
+    # 4️⃣ بناء Angular
     - name: Build Angular
       run: npm run build --if-present
 
+    # 5️⃣ التحقق من مجلد البناء
+    - name: Check dist folder
+      run: ls -la dist/store.ui/browser
+
+    # 6️⃣ تنظيف مجلد الهدف على VPS
+    - name: Clean remote folder
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.NEW_VPS_HOST }}
+        username: ${{ secrets.NEW_VPS_USER }}
+        key: ${{ secrets.NEW_VPS_KEY }}
+        port: 22
+        script: |
+          rm -rf /var/www/eng-sy/*
+          mkdir -p /var/www/eng-sy
+
+    # 7️⃣ نسخ الملفات إلى VPS
     - name: Copy files to VPS
       uses: appleboy/scp-action@v0.1.3
       with:
@@ -34,11 +55,12 @@ jobs:
         source: "dist/store.ui/browser/*"
         target: "/var/www/eng-sy/"
 
+    # 8️⃣ إعادة تحميل Nginx
     - name: Reload Nginx
       uses: appleboy/ssh-action@v0.1.7
       with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USER }}
+        host: ${{ secrets.NEW_VPS_HOST }}
+        username: ${{ secrets.NEW_VPS_USER }}
         key: ${{ secrets.NEW_VPS_KEY }}
         port: 22
         script: |
